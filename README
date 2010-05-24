@@ -1,2 +1,15 @@
-Toggle Menu plugin for gEdit, allows you to show or hide main menu bar, whenever you want it with CTRL + ALT + M keyboard shortcut or when shown, from menu bar it-self View > Toggle Menu.
-Hell yeah, it even saves status of your chose inside ~/.toggleMenu ;) (of course if it is possible)
+=== Toggle Menu plugin for gEdit ==
+
+Add missing show or hide menu bar feature in gEdit. Toggle it with CTRL + ALT + M (or edit source for your pleasure)
+
+=== How to install ===
+
+First thing in list, check if you have gEdit plugins folder created
+$ mkdir ~/.gnome2/gedit/plugins/
+
+After that clone source and copy it to plugins folder
+$ git clone http://github.com/intarstudents/gEdit-Toggle-Menu.git
+$ cd gEdit-Toggle-Menu/
+$ cp toggleMenu.* ~/.gnome2/gedit/plugins/
+
+Thats all! Start up gEdit and enable it in Edit > Preferences > Plugins
