@@ -12,4 +12,4 @@ $ git clone http://github.com/intarstudents/gEdit-Toggle-Menu.git
 $ cd gEdit-Toggle-Menu/
 $ cp toggleMenu.* ~/.gnome2/gedit/plugins/
 
-Thats all! Start up gEdit and enable it in Edit > Preferences > Plugins
+That's all! Start up gEdit and enable it in Edit > Preferences > Plugins
