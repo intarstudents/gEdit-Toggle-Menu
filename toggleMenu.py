@@ -23,12 +23,13 @@ class toggleMenuInstance:
     self._plugin = plugin
     
     # Find location of Toggle Menu config file (if it's possible)
-    try: self._config = os.path.expanduser('~')+"/.toggleMenu"
-    except: self._config = ""
+    try: self._config     = os.path.expanduser('~')+"/.toggleMenu"
+    except: self._config  = ""
     
     # Get gEdit main menu bar object
-    self._manager = self._window.get_ui_manager()
-    self._menuBar = self._manager.get_widget("/ui/MenuBar")
+    self._manager     = self._window.get_ui_manager()
+    self._menuBar     = self._manager.get_widget("/ui/MenuBar")
+    self._menuVisible = True
     
     # Append custom menu item and key shortcut to toggle menu bar
     toggleMenuBar = (
@@ -49,14 +50,27 @@ class toggleMenuInstance:
     try:
       if os.path.exists(self._config):
         self._menuBar.hide()
+        self._menuVisible = False
         
     except: pass
+    
+    # Track gedit window for sudden fullscreen movements
+    self._trackWindow_id = self._window.connect("window-state-event", self.trackWindow)
+    
+  def trackWindow(self, window, callback_data):
+    if not callback_data.new_window_state & gtk.gdk.WINDOW_STATE_FULLSCREEN and callback_data.changed_mask & gtk.gdk.WINDOW_STATE_FULLSCREEN:
+      # If menu wasn't visible before fullscreen, hide it again (with fake toggle)
+      if not self._menuVisible:
+        self.toggle("_")
+      
   
   # Show menu, remove custom menu item & keyboard shortcut
   def deactivate(self):
     self._menuBar.show()
     self._manager.remove_ui(self._ui_id)
     self._manager.ensure_update()
+    
+    self._window.disconnect(self._trackWindow_id)
     
     del self
   
@@ -65,16 +79,20 @@ class toggleMenuInstance:
     if self._menuBar.flags() & gtk.VISIBLE:
       
       self._menuBar.hide()
+      self._menuVisible = False
+      
       try: open(self._config, 'w').close()
       except: pass
     
     else:
       
       self._menuBar.show()
+      self._menuVisible = True
+      
       try: os.unlink(self._config)
       except: pass
 
-# Basic gEdit plugin structure (nothing interesting)
+# Basic gedit plugin structure (nothing interesting)
 class toggleMenuPlugin(gedit.Plugin):
   def __init__(self):
     gedit.Plugin.__init__(self)
