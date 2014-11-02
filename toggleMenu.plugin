@@ -1,7 +1,7 @@
-[Gedit Plugin]
+[Plugin]
 Loader=python
 Module=toggleMenu
-IAge=2
+IAge=3
 Name=Toggle Menu
 Description=Show or Hide Menu Bar
 Authors=Intars Students <the.mobix@gmail.com>
