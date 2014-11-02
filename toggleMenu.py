@@ -75,6 +75,7 @@ class toggleMenuInstance:
     if not callback_data.new_window_state & Gdk.WindowState.FULLSCREEN and callback_data.changed_mask & Gdk.WindowState.FULLSCREEN:
       # If menu wasn't visible before fullscreen, hide it again (with fake toggle)
       if not self._menuVisible:
+        self._menuVisible = True
         self.toggle("_")
       
   
