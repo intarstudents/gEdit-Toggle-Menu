@@ -8,8 +8,12 @@ First thing in list, check if you have gEdit plugins folder created
 $ mkdir -p ~/.local/share/gedit/plugins/
 
 After that clone source and copy it to plugins folder
-$ git clone http://github.com/rodrigoburim/gEdit-Toggle-Menu.git
+$ git clone http://github.com/intarstudents/gEdit-Toggle-Menu.git
 $ cd gEdit-Toggle-Menu/
 $ cp toggleMenu.* ~/.local/share/gedit/plugins/
 
 That's all! Start up gEdit and enable it in Edit > Preferences > Plugins
+
+=== Contributors ===
+
+Rodrigo Burim - https://github.com/rodrigoburim
