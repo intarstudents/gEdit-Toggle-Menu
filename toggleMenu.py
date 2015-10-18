@@ -14,9 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gedit
-import gtk
-import os
+from gi.repository import Gtk, GObject, Gedit, Gdk
 
 # Toggle menu item XML
 ui_manager_xml = """
@@ -56,7 +54,7 @@ class toggleMenuInstance:
       _("Show or Hide Menu Bar"),
       self.toggle
     )
-    self._action_group = gtk.ActionGroup("toggleMenuBar")
+    self._action_group = Gtk.ActionGroup("toggleMenuBar")
     self._action_group.add_actions([toggleMenuBar])
     self._manager.insert_action_group(self._action_group, -1)
     
@@ -74,9 +72,10 @@ class toggleMenuInstance:
     self._trackWindow_id = self._window.connect("window-state-event", self.trackWindow)
     
   def trackWindow(self, window, callback_data):
-    if not callback_data.new_window_state & gtk.gdk.WINDOW_STATE_FULLSCREEN and callback_data.changed_mask & gtk.gdk.WINDOW_STATE_FULLSCREEN:
+    if not callback_data.new_window_state & Gdk.WindowState.FULLSCREEN and callback_data.changed_mask & Gdk.WindowState.FULLSCREEN:
       # If menu wasn't visible before fullscreen, hide it again (with fake toggle)
       if not self._menuVisible:
+        self._menuVisible = True
         self.toggle("_")
       
   
@@ -92,8 +91,8 @@ class toggleMenuInstance:
   
   # Toggle menu bar and save current status in file (kinda)
   def toggle(self, action):
-    if self._menuBar.flags() & gtk.VISIBLE:
-      
+    #if self._menuBar.flags() & Gtk.VISIBLE:
+    if self._menuVisible == True:  
       self._menuBar.hide()
       self._menuVisible = False
       
@@ -109,17 +108,19 @@ class toggleMenuInstance:
       except: pass
 
 # Basic gedit plugin structure (nothing interesting)
-class toggleMenuPlugin(gedit.Plugin):
+class toggleMenuPlugin(GObject.Object, Gedit.WindowActivatable):
+  window = GObject.property(type=Gedit.Window)
+  
   def __init__(self):
-    gedit.Plugin.__init__(self)
+    GObject.Object.__init__(self)
     self._instances = {}
   
-  def activate(self, window):
-    self._instances[window] = toggleMenuInstance(self, window)
+  def do_activate(self):
+    self._instances[self.window] = toggleMenuInstance(self, self.window)
     
-  def deactivate(self, window):
-    self._instances[window].deactivate()
-    del self._instances[window]
+  def do_deactivate(self):
+    self._instances[self.window].deactivate()
+    del self._instances[self.window]
     
-  def update_ui(self, window):
+  def update_ui(self):
     pass
